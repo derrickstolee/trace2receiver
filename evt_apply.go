@@ -139,6 +139,9 @@ func apply__error(tr2 *trace2Dataset, evt *TrEvent) (err error) {
 		tr2.process.exeErrorMsg = evt.pm_error.mf_msg
 	}
 
+	// Check for custom summary message pattern matches
+	apply__custom_summary_message(tr2, evt.pm_error.mf_msg)
+
 	return nil
 }
 
@@ -680,6 +683,14 @@ func apply__region_enter(tr2 *trace2Dataset, evt *TrEvent) (err error) {
 		r.message = *evt.pm_region_enter.pmf_msg
 	}
 
+	// Store category and label for custom summary matching
+	if evt.pm_region_enter.pmf_category != nil {
+		r.category = *evt.pm_region_enter.pmf_category
+	}
+	if evt.pm_region_enter.pmf_label != nil {
+		r.label = *evt.pm_region_enter.pmf_label
+	}
+
 	// Regions are associated with an optional repo-id that defines the
 	// worktree.
 	if evt.pmf_repo == nil {
@@ -775,6 +786,9 @@ func apply__region_leave(tr2 *trace2Dataset, evt *TrEvent) (err error) {
 
 	r.lifetime.endTime = evt.mf_time
 
+	// Apply custom summary region rules
+	apply__custom_summary_region(tr2, r)
+
 	// TODO The region-leave event has optional category and label fields.
 	// These almost always match the values on the region-enter, but they
 	// don't have to.  Consider overriding them or somehow picking the
@@ -808,6 +822,12 @@ func apply__data_generic(tr2 *trace2Dataset, evt *TrEvent) (err error) {
 	if evt.pm_generic_data.mf_nesting <= 1 {
 		tr2.process.setGenericDataValue(evt.pm_generic_data.mf_category,
 			evt.pm_generic_data.mf_key, evt.pm_generic_data.mf_generic_value)
+
+		// Check if the value is a string and matches message patterns
+		if strValue, ok := evt.pm_generic_data.mf_generic_value.(string); ok {
+			apply__custom_summary_message(tr2, strValue)
+		}
+
 		return nil
 	}
 
