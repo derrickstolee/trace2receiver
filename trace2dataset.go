@@ -270,7 +270,7 @@ func NewTrace2Dataset(rcvr_base *Rcvr_Base) *trace2Dataset {
 
 	// Initialize custom summary accumulator if configured
 	if rcvr_base != nil && rcvr_base.RcvrConfig != nil && rcvr_base.RcvrConfig.customSummary != nil {
-		tr2.process.customSummary = newCustomSummaryAccumulator()
+		tr2.process.customSummary = configuredCustomSummary(rcvr_base.RcvrConfig.customSummary)
 	}
 
 	return tr2

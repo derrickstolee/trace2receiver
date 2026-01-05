@@ -29,6 +29,27 @@ func newCustomSummaryAccumulator() *CustomSummaryAccumulator {
 	}
 }
 
+func configuredCustomSummary(settings *CustomSummarySettings) *CustomSummaryAccumulator {
+	summary := newCustomSummaryAccumulator()
+
+	// Initialize messageCounts with field names from MessagePatterns
+	for _, rule := range settings.MessagePatterns {
+		summary.messageCounts[rule.FieldName] = 0
+	}
+
+	// Initialize regionCounts and regionTimes with field names from RegionTimers
+	for _, rule := range settings.RegionTimers {
+		if len(rule.CountField) > 0 {
+			summary.regionCounts[rule.CountField] = 0
+		}
+		if len(rule.TimeField) > 0 {
+			summary.regionTimes[rule.TimeField] = 0.0
+		}
+	}
+
+	return summary
+}
+
 func customSummaryNonNull(csa *CustomSummaryAccumulator) bool {
 	if len(csa.messageCounts) > 0 {
 		return true
