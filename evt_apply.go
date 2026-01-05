@@ -145,6 +145,16 @@ func apply__error(tr2 *trace2Dataset, evt *TrEvent) (err error) {
 	return nil
 }
 
+func apply__printf(tr2 *trace2Dataset, evt *TrEvent) (err error) {
+	// The "printf" event contains a "msg" string with the actual error
+	// message that the user would see on the console.
+
+	// Check for custom summary message pattern matches
+	apply__custom_summary_message(tr2, evt.pm_printf.mf_msg)
+
+	return nil
+}
+
 func apply__cmd_path(tr2 *trace2Dataset, evt *TrEvent) (err error) {
 	// "cmd_path" is only present in certain circumstances where Git needs
 	// to reconstruct the path to currently running EXE by querying the
