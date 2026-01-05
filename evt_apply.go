@@ -60,6 +60,7 @@ var applymap *ApplyMap = &ApplyMap{
 	"th_timer":     apply__th_timer,
 	"counter":      apply__counter,
 	"th_counter":   apply__th_counter,
+	"printf":       apply__printf,
 	// "too_many_files": nil, // we don't care about this
 }
 
