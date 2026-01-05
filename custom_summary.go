@@ -50,31 +50,6 @@ func configuredCustomSummary(settings *CustomSummarySettings) *CustomSummaryAccu
 	return summary
 }
 
-func customSummaryNonNull(csa *CustomSummaryAccumulator) bool {
-	// Check if any message count has a non-zero value
-	for _, count := range csa.messageCounts {
-		if count > 0 {
-			return true
-		}
-	}
-
-	// Check if any region count has a non-zero value
-	for _, count := range csa.regionCounts {
-		if count > 0 {
-			return true
-		}
-	}
-
-	// Check if any region time has a non-zero value
-	for _, time := range csa.regionTimes {
-		if time > 0 {
-			return true
-		}
-	}
-
-	return false
-}
-
 // incrementMessageCount increments the count for a specific field name
 // by 1. This is called when a message matches a configured prefix pattern.
 func (csa *CustomSummaryAccumulator) incrementMessageCount(fieldName string) {
