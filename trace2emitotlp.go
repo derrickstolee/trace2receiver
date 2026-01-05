@@ -277,6 +277,11 @@ func emitProcessSpan(span *ptrace.Span, tr2 *trace2Dataset, dl FilterDetailLevel
 		}
 	}
 
+	if customSummaryNonNull(tr2.process.customSummary) {
+		jargs, _ := json.Marshal(tr2.process.customSummary)
+		sm.PutStr(string(Trace2ProcessCustom), string(jargs))
+	}
+
 	if WantProcessTimersCountersAndData(dl) {
 		if tr2.process.dataValues != nil && len(tr2.process.dataValues) > 0 {
 			jargs, _ := json.Marshal(tr2.process.dataValues)

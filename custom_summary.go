@@ -29,6 +29,16 @@ func newCustomSummaryAccumulator() *CustomSummaryAccumulator {
 	}
 }
 
+func customSummaryNonNull(csa *CustomSummaryAccumulator) bool {
+	if len(csa.messageCounts) > 0 {
+		return true
+	}
+	if len(csa.regionCounts) > 0 {
+		return true
+	}
+	return false
+}
+
 // incrementMessageCount increments the count for a specific field name
 // by 1. This is called when a message matches a configured prefix pattern.
 func (csa *CustomSummaryAccumulator) incrementMessageCount(fieldName string) {
