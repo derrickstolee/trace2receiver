@@ -51,12 +51,27 @@ func configuredCustomSummary(settings *CustomSummarySettings) *CustomSummaryAccu
 }
 
 func customSummaryNonNull(csa *CustomSummaryAccumulator) bool {
-	if len(csa.messageCounts) > 0 {
-		return true
+	// Check if any message count has a non-zero value
+	for _, count := range csa.messageCounts {
+		if count > 0 {
+			return true
+		}
 	}
-	if len(csa.regionCounts) > 0 {
-		return true
+
+	// Check if any region count has a non-zero value
+	for _, count := range csa.regionCounts {
+		if count > 0 {
+			return true
+		}
 	}
+
+	// Check if any region time has a non-zero value
+	for _, time := range csa.regionTimes {
+		if time > 0 {
+			return true
+		}
+	}
+
 	return false
 }
 
@@ -85,15 +100,21 @@ func (csa *CustomSummaryAccumulator) toMap() map[string]interface{} {
 	result := make(map[string]interface{})
 
 	for fieldName, count := range csa.messageCounts {
-		result[fieldName] = count
+		if count > 0 {
+			result[fieldName] = count
+		}
 	}
 
 	for fieldName, count := range csa.regionCounts {
-		result[fieldName] = count
+		if count > 0 {
+			result[fieldName] = count
+		}
 	}
 
 	for fieldName, time := range csa.regionTimes {
-		result[fieldName] = time
+		if time > 0 {
+			result[fieldName] = time
+		}
 	}
 
 	return result
