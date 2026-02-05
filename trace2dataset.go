@@ -516,11 +516,11 @@ func (tr2 *trace2Dataset) exportTraces() {
 		tr2.process.paramSetValues,
 		tr2.process.qualifiedNames)
 
-	tr2.rcvr_base.Logger.Debug(dl_debug)
-
 	if dl == DetailLevelDrop {
 		return
 	}
+
+	tr2.rcvr_base.Logger.Debug(dl_debug)
 
 	traces := tr2.ToTraces(dl, tr2.rcvr_base.RcvrConfig.filterSettings.Keynames)
 
